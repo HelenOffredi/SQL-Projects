@@ -10,7 +10,8 @@ FROM profileprojects.dbo.NashvilleHousing;
 
 UPDATE NashvilleHousing
 SET saledate = CONVERT(date,saledate);
---didnt work so trying another way
+
+--Didn't update so trying another way
 
 ALTER TABLE Nashvillehousing
 ADD Saledateconverted date;
