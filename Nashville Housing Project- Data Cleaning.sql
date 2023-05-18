@@ -54,7 +54,7 @@ SELECT SUBSTRING(propertyaddress,1, CHARINDEX(',', propertyaddress)-1) AS Addres
 		SUBSTRING(propertyaddress, CHARINDEX(',', propertyaddress)+1, LEN(propertyaddress)) AS Address2
 FROM profileprojects.dbo.NashvilleHousing;
 
---create 2 new columns to show above address splits
+--Create 2 new columns to show above address splits
 
 ALTER TABLE Nashvillehousing
 ADD Address1 nvarChar(255), City nvarChar(255)
@@ -63,7 +63,7 @@ UPDATE NashvilleHousing
 SET Address1 = SUBSTRING(propertyaddress,1, CHARINDEX(',', propertyaddress)-1), 
 	City = SUBSTRING(propertyaddress, CHARINDEX(',', propertyaddress)+1, LEN(propertyaddress));
 
---check columns added
+--CHECK columns added
 SELECT *
 FROM profileprojects.dbo.NashvilleHousing;
 
@@ -75,7 +75,7 @@ PARSENAME (REPLACE(Owneraddress,',', '.'), 2),
 PARSENAME (REPLACE(Owneraddress,',', '.'), 1)
 FROM profileprojects.dbo.NashvilleHousing;
 
---add columns for split owner address details
+--Add columns for split owner address details (Address, City, State)
 
 ALTER TABLE Nashvillehousing
 ADD Owneradd1 nvarchar(255), OwnerCity varchar(255), OwnerState nvarchar(255)
@@ -107,20 +107,20 @@ SET SoldAsVacant = CASE WHEN Soldasvacant = 'Y' THEN 'Yes'
 							WHEN Soldasvacant = 'N' THEN 'No' 
 							ELSE SoldasVacant END
 
---check all updates actioned correctly
+--CHECK all updates actioned correctly
 
 SELECT DISTINCT SoldAsVacant, COUNT(SoldAsVacant)
 FROM profileprojects.dbo.NashvilleHousing
 GROUP BY SoldAsVacant
 ORDER BY 2;
 
---remove duplicates, using Window functions & CTE
+--Remove duplicates, using Window functions & CTE
 
 SELECT *, ROW_NUMBER() OVER(PARTITION BY parcelid, propertyaddress, saleprice, saledate, legalreference ORDER BY uniqueID) AS ROW_NUM
 FROM profileprojects.dbo.NashvilleHousing
 ORDER BY parcelId;
 
---create CTE to select duplicates (any row nums > 1) from
+--Create CTE to select duplicates (any row nums > 1) from
 WITH RowNumCTE AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY parcelid, propertyaddress, saleprice, saledate, legalreference ORDER BY uniqueID) AS ROW_NUM
 				FROM profileprojects.dbo.NashvilleHousing)
 				
@@ -130,7 +130,8 @@ FROM RowNumCTE
 WHERE ROW_NUM > 1
 ORDER BY PropertyAddress;
 
---delete duplicates
+--Delete duplicates
+
 WITH RowNumCTE AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY parcelid, propertyaddress, saleprice, saledate, legalreference ORDER BY uniqueID) AS ROW_NUM
 				FROM profileprojects.dbo.NashvilleHousing)
 				
@@ -148,12 +149,12 @@ SELECT *
 FROM RowNumCTE
 WHERE ROW_NUM > 1;
 
---delete unused columns
+--Delete unused columns
 
 ALTER TABLE profileprojects.dbo.NashvilleHousing
 DROP COLUMN  Owneraddress, propertyaddress, taxdistrict, saledate;
 
---check
+--CHECK
 SELECT *
 FROM profileprojects.dbo.NashvilleHousing;
 
