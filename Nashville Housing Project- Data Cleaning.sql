@@ -1,5 +1,7 @@
 --Cleaning Data in SQL
 
+--Skills used Window functions, CTEs, Missing & Duplicate data, Converting data types, Substring functions, Standardising data using Case When
+
 SELECT *
 FROM profileprojects.dbo.NashvilleHousing;
 
@@ -26,7 +28,7 @@ FROM profileprojects.dbo.NashvilleHousing
 --WHERE PropertyAddress IS NULL
 ORDER BY ParcelID;
 
--- Populate NULLs with address data where Parcel IDs are equal
+--Populate NULLs with address data where Parcel IDs are equal
 
 SELECT a.ParcelID, a.PropertyAddress, b.ParcelID, b.PropertyAddress, ISNULL(a.PropertyAddress, b.PropertyAddress)
 FROM profileprojects.dbo.NashvilleHousing AS a
@@ -47,7 +49,7 @@ WHERE a.PropertyAddress IS NULL;
 
 SELECT PropertyAddress
 FROM profileprojects.dbo.NashvilleHousing;
-----WHERE PropertyAddress IS NULL
+--WHERE PropertyAddress IS NULL
 --ORDER BY ParcelID;
 
 SELECT SUBSTRING(propertyaddress,1, CHARINDEX(',', propertyaddress)-1) AS Address, 
@@ -67,7 +69,7 @@ SET Address1 = SUBSTRING(propertyaddress,1, CHARINDEX(',', propertyaddress)-1),
 SELECT *
 FROM profileprojects.dbo.NashvilleHousing;
 
--- Split Owner address using PARSE
+--Split Owner address using PARSE
 
 SELECT 
 PARSENAME (REPLACE(Owneraddress,',', '.'), 3),
@@ -85,7 +87,7 @@ SET Owneradd1 = PARSENAME (REPLACE(Owneraddress,',', '.'), 3),
 	OwnerCity = PARSENAME (REPLACE(Owneraddress,',', '.'), 2),
 	OwnerState = PARSENAME (REPLACE(Owneraddress,',', '.'), 1);
 
-	--check columns added
+--CHECK columns added
 SELECT *
 FROM profileprojects.dbo.NashvilleHousing;
 
