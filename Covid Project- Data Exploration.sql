@@ -1,3 +1,11 @@
+/* 
+
+Covid 19 Data Exploration
+
+Skills used: Joins, CTE's, Temp Tables, Windows Functions, Aggregate Functions, Creating Views, Converting Data Types
+
+*/
+
 --SELECT *
 --FROM Coviddeaths$
 --ORDER BY 3,4
@@ -56,7 +64,7 @@ GROUP BY continent
 ORDER BY ttl_death_count DESC;
 
 --Global numbers
---create CTE for global population
+--Create CTE for global population
 
 WITH globalpop AS (SELECT location, SUM(new_cases) AS ttl_cases, SUM(new_deaths) AS ttl_deaths, MAX(population) AS ttl_pop
 					FROM Coviddeaths$
@@ -68,7 +76,7 @@ FROM globalpop;
 
 --Join Covid deaths & covid vaccinations
 --Join on location & date
---select new vaccinations by date and running total
+--Select new vaccinations by date and running total
 
 
 SELECT D.continent, D.location, D.date, D.population, V.new_vaccinations, SUM(v.new_vaccinations) OVER (PARTITION BY D.location ORDER BY D.date) AS running_ttl
@@ -77,7 +85,7 @@ JOIN covidvaccinations$ AS V
 ON D.location=V.location AND D.date=V.date
 ORDER BY 2,3;
 
--- Use CTE
+--Use CTE
 --Add % of population that have been vaccinated
 
 WITH percpopvac AS (SELECT D.continent, D.location, D.date, D.population, V.new_vaccinations, SUM(v.new_vaccinations) OVER (PARTITION BY D.location ORDER BY D.date) AS running_ttl
@@ -103,7 +111,7 @@ SELECT *, (running_ttl/population)*100
 FROM #percentpopulationvaccinated;
 
 
---creating view to store data for later visualisations
+--Creating view to store data for later visualisations
 
 CREATE VIEW percentpopulationvaccinated AS
 SELECT D.continent, D.location, D.date, D.population, V.new_vaccinations, SUM(v.new_vaccinations) OVER (PARTITION BY D.location ORDER BY D.date) AS running_ttl
