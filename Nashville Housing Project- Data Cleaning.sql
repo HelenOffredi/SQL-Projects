@@ -26,7 +26,7 @@ FROM profileprojects.dbo.NashvilleHousing
 --WHERE PropertyAddress IS NULL
 ORDER BY ParcelID;
 
--- first populate NULLs with address data where Parcal IDs are =
+-- Populate NULLs with address data where Parcel IDs are equal
 
 SELECT a.ParcelID, a.PropertyAddress, b.ParcelID, b.PropertyAddress, ISNULL(a.PropertyAddress, b.PropertyAddress)
 FROM profileprojects.dbo.NashvilleHousing AS a
