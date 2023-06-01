@@ -1,2 +1,2 @@
 # SQL-Projects
-A place to showcase all of my SQL skills
+A place to showcase my SQL skills
